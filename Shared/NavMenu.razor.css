@@ -1,0 +1,24 @@
+details {
+    color: #fff;
+    background-color: #c6f10452;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+nav {
+    padding-left: 20px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    margin: 20px 0; /* Incrementamos el valor del primer parámetro */
+}

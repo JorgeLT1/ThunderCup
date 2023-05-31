@@ -1,0 +1,177 @@
+@page "/jugador"
+@page "/Jugador/{JugadorId:int}"
+@inject JugadorBLL JugadorBLL
+@inject NotificationService notificationService
+
+<EditForm Model="jugador" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+        <div class="accordion-item">
+            <div class="modal-header">
+                <h1>Registro de usuario</h1>
+            </div>
+
+            <div class="accordion-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="JugadorId">Id</label>
+                        <div class="input-group">
+                            <InputNumber type="number" @bind-Value="jugador.JugadorId" class="form-control" />
+                            <button type="button" class="btn btn-outline-primary" @onclick="Buscar"><span
+                                    class="oi oi-magnifying-glass"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="NombreJugador" class="form-label">Nombre del Jugador</label>
+                        <InputText @bind-Value="jugador.NombreJugadorReal" class="form-control" id="Modelo" />
+                        <ValidationMessage For="@(() => jugador.NombreJugadorReal)" />
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="usuario" class="form-label">Nombre de usuario</label>
+                        <InputText @bind-Value="jugador.Usuario" class="form-control" id="Modelo" />
+                        <ValidationMessage For="@(() => jugador.Usuario)" />
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Edad" class="form-label">Edad</label>
+                        <InputNumber @bind-Value="jugador.Edad" class="form-control" id="Modelo" />
+                        <ValidationMessage For="@(() => jugador.Edad)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="Liga" class="form-label">Liga</label>
+                        <InputText @bind-Value="jugador.Liga" class="form-control" id="Modelo" />
+                        <ValidationMessage For="@(() => jugador.Liga)" />
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Fecha" class="form-label">Fecha</label>
+                        <InputDate @bind-Value="jugador.Fecha" class="form-control" id="Modelo" />
+                    </div>
+                </div>
+
+            </div>
+
+            @*Botones*@
+            <hr>
+            <div class="text-center">
+                <button type="button" class="btn btn-outline-primary" @onclick="Nuevo"><span class="oi oi-file"></span>
+                    Nuevo</button>
+                <button type="submit" class="btn btn-outline-success"><span class="oi oi-document"></span>
+                    Guardar</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="Eliminar"><span
+                        class="oi oi-delete"></span>
+                    Eliminar</button>
+                <br>
+                <br>
+            </div>
+        </div>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public int jugadorId { get; set; }
+
+    public Jugador jugador { get; set; } = new Jugador();
+
+    protected override void OnInitialized()
+    {
+        if (jugadorId > 0)
+        {
+            this.jugador.JugadorId = jugadorId;
+            this.Buscar();
+        }
+    }
+    private void Buscar()
+    {
+        var encontrado = JugadorBLL.Buscar(jugador.JugadorId);
+
+        if (encontrado != null)
+        {
+            jugador = encontrado;
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Se ha encontrado con éxito."
+                });
+        }
+        else
+        {
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Warning,
+                    Summary = "Error, verifique el Id."
+                });
+        }
+    }
+
+    public void Nuevo()
+    {
+        this.jugador = new Jugador();
+    }
+
+    public void Guardar()
+    {
+        var guardado = JugadorBLL.Guardar(jugador);
+
+        if (guardado)
+        {
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Guardado con exito."
+                });
+            Nuevo();
+        }
+        else
+        {
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "ERROR!!. Favor revisar los campos."
+                });
+            Nuevo();
+        }
+
+    }
+    public void Eliminar()
+    {
+        if (JugadorBLL.Eliminar(jugador))
+        {
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "No hay nada para eliminar"
+                });
+
+            Nuevo();
+        }
+        else
+        {
+            ShowNotification(
+            new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Error"
+                });
+        }
+    }
+
+    public void ShowNotification(NotificationMessage message)
+    {
+        notificationService.Notify(message);
+    }
+
+
+}

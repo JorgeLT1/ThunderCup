@@ -1,0 +1,41 @@
+﻿
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+<a class="navbar-brand" href="" style="color: rgb(255, 255, 255);">ThunderCup</a>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <hr class="dropdown-divider" />
+            <NavLink class="nav-link" href="jugador" Match="NavLinkMatch.All" style="display:none">
+                <span class="oi oi-controller" aria-hidden="true"></span> Registro Jugadores
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+<details>
+    <summary>Registros</summary>
+    <nav>
+        <a href="jugador"><span class="oi oi-controller" aria-hidden="true"></span> Registro jugadores</a>
+    </nav>
+</details>
+
+<details>
+    <summary>Consultas</summary>
+    <nav>
+        <a href="c_jugador"><span class="oi oi-cart" aria-hidden="true"></span> Consulta jugadores</a>
+    </nav>
+</details>
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
